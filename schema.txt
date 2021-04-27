@@ -1,0 +1,47 @@
+musician: musician_id, name, instrument, image_url
+
+band: band_id, description, image_url
+
+musician_band: musician_id, band_id  
+
+musicians:
+musician_id | name  | instrument | image_url 
+===================================
+1           | John   | guitar    | dsvsd
+2           | Jane   | piano     | dsvsd
+3           | Daniel | saxofone  | sdbs
+
+CREATE TABLE musicians(
+    musician_id SERIAL PRIMARY KEY, 
+    name VARCHAR ( 50 ) NOT NULL,
+    instrument VARCHAR ( 50 ) NOT NULL, 
+    image_url VARCHAR ( 200 ) NOT NULL
+);
+
+bands:
+band_id | name         | description  | image_url 
+==================================
+1       | Beatles      | sdv          | sdv
+2       | Doors        | vsdv         | sdv
+3       | Kinks        | sdv          | sdv
+ 
+CREATE TABLE bands(
+    band_id SERIAL PRIMARY KEY, 
+    name VARCHAR ( 20 ) NOT NULL,
+    description VARCHAR ( 200 ) NOT NULL,
+    image_url VARCHAR ( 200 ) NOT NULL
+);
+
+musician_band
+musician_id | band_id
+======================
+  1         |  2   # John is in Beatles 
+  1         |  3   # John is in Kinks
+  2         |  2   # Jane is in Doors
+  3         |  1   # Daniel is in Beatles
+
+CREATE TABLE musician_band(
+    id SERIAL PRIMARY KEY, 
+    musician_id VARCHAR ( 50 ) NOT NULL,
+    band_id VARCHAR ( 50 ) NOT NULL
+);
