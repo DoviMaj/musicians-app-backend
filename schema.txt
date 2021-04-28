@@ -44,6 +44,6 @@ musician_id | band_id
 
 CREATE TABLE musician_band(
     id SERIAL PRIMARY KEY, 
-    musician_id VARCHAR ( 50 ) NOT NULL,
-    band_id VARCHAR ( 50 ) NOT NULL
+    musician_id INT NOT NULL,
+    band_id INT NOT NULL
 );
