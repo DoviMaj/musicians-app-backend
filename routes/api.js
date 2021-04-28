@@ -59,6 +59,22 @@ router.get("/musicians/:id", (req, res, next) => {
   );
 });
 
+// GET: all bands for single musician
+router.get("/musicians/:id/bands", (req, res, next) => {
+  console.log(req.params.id);
+  pool.query(
+    "SELECT b.band_id, name, description, image_url FROM musician_band mb JOIN bands b ON b.band_id = mb.band_id WHERE mb.musician_id = $1",
+    [req.params.id],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      res.json(results.rows);
+    }
+  );
+});
+
 /* POST: register new band. */
 router.post("/bands", function (req, res, next) {
   console.log("hi");
