@@ -12,19 +12,19 @@ const pool = new Pool({
 
 /* POST: register new musician. */
 router.post("/musician", function (req, res, next) {
-  console.log(req.body);
   const getAge = (birthDate) =>
     Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
 
   let data = req.body;
   data.age = getAge(data.date_of_birth);
 
-  const { name, instrument, image_url } = data;
+  const { name, age, date_of_birth, instrument, image_url } = data;
   pool.query(
-    "INSERT INTO musicians(name, instrument, image_url) VALUES($1, $2, $3);",
-    [name, instrument, image_url],
+    "INSERT INTO musicians(name, age, date_of_birth, instrument, image_url) VALUES($1, $2, $3, $4, $5)",
+    [name, age, date_of_birth, instrument, image_url],
     (error, results) => {
       if (error) {
+        console.log(error);
         throw error;
       }
       return res.json(results.rows);
@@ -34,12 +34,29 @@ router.post("/musician", function (req, res, next) {
 
 /* GET: get all musicians. */
 router.get("/musicians", (req, res, next) => {
-  pool.query("SELECT * FROM musicians;", (error, results) => {
+  pool.query("SELECT * FROM musicians", (error, results) => {
     if (error) {
+      console.log(error);
       throw error;
     }
     res.json(results.rows);
   });
+});
+
+/* GET: get one musician. */
+router.get("/musicians/:id", (req, res, next) => {
+  console.log(req.params.id);
+  pool.query(
+    "SELECT * FROM musicians WHERE musician_id = $1",
+    [req.params.id],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      res.json(results.rows);
+    }
+  );
 });
 
 /* POST: register new band. */
@@ -49,26 +66,44 @@ router.post("/bands", function (req, res, next) {
   const { name, description, image_url } = req.body;
 
   pool.query(
-    "INSERT INTO bands(name, description, image_url) VALUES($1, $2, $3);",
+    "INSERT INTO bands(name, description, image_url) VALUES($1, $2, $3)",
     [name, description, image_url],
     (error, results) => {
       if (error) {
+        console.log(error);
         throw error;
       }
       return res.json(results.rows);
     }
   );
-  // res.status(200).json(req.body);
 });
 
 /* GET: get all bands. */
 router.get("/bands", (req, res, next) => {
-  pool.query("SELECT * FROM bands;", (error, results) => {
+  pool.query("SELECT * FROM bands", (error, results) => {
     if (error) {
+      console.log(error);
       throw error;
     }
     res.json(results.rows);
   });
+});
+
+/* POST: add band to musician relationship. */
+router.post("/musician_band", (req, res, next) => {
+  console.log(req.body.band_id);
+  const { band_id, musician_id } = req.body;
+  pool.query(
+    "INSERT INTO musician_band(musician_id, band_id) VALUES($1, $2)",
+    [musician_id, band_id],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      res.json(results.rows);
+    }
+  );
 });
 
 module.exports = router;
