@@ -6,6 +6,9 @@
 * Express.js
 
 Database schema [here](https://github.com/DoviMaj/musicians-app-backend/blob/master/schema.txt)
+
+Run to import the sample db: `psql -d api -f api.sql`
+
 ## Getting Started
 
 Add a `.env` file with those properties:
