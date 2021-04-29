@@ -5,6 +5,7 @@
 * PostgreSQL 
 * Express.js
 
+Database schema [here](https://github.com/DoviMaj/musicians-app-backend/blob/master/schema.txt)
 ## Getting Started
 
 Add a `.env` file with those properties:
