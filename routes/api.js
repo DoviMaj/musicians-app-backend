@@ -1,14 +1,10 @@
 var express = require("express");
 var router = express.Router();
+require("dotenv").config();
+let multer = require("multer");
+let upload = multer({ dest: "uploads/" });
 const Pool = require("pg").Pool;
-
-const pool = new Pool({
-  user: "me",
-  host: "localhost",
-  database: "api",
-  password: "password",
-  port: 5432,
-});
+const pool = new Pool();
 
 // Create musician table
 pool.query(
@@ -147,7 +143,8 @@ router.get("/bands/:id", (req, res, next) => {
 });
 
 /* GET: get all bands. */
-router.get("/bands", (req, res, next) => {
+router.get("/bands", upload.single("image"), (req, res, next) => {
+  console.log(req.file, req.body);
   pool.query("SELECT * FROM bands", (error, results) => {
     if (error) {
       console.log(error);
