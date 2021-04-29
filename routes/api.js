@@ -10,6 +10,40 @@ const pool = new Pool({
   port: 5432,
 });
 
+// Create musician table
+pool.query(
+  "CREATE TABLE IF NOT EXISTS musicians(musician_id SERIAL PRIMARY KEY, name VARCHAR ( 50 ) NOT NULL, age INT NOT NULL, date_of_birth DATE NOT NULL, instrument VARCHAR ( 50 ) NOT NULL, image_url VARCHAR ( 200 ) NOT NULL);",
+  [],
+  (err, result) => {
+    if (err) {
+      return console.error("Error executing query", err.stack);
+    }
+  }
+);
+
+// Create band table
+pool.query(
+  "CREATE TABLE IF NOT EXISTS bands( band_id SERIAL PRIMARY KEY, name VARCHAR ( 20 ) NOT NULL, description VARCHAR ( 200 ) NOT NULL,image_url VARCHAR ( 200 ) NOT NULL)",
+  [],
+  (err, result) => {
+    if (err) {
+      return console.error("Error executing query", err.stack);
+    }
+  }
+);
+
+// Create junction table
+pool.query(
+  "CREATE TABLE IF NOT EXISTS musician_band( id SERIAL PRIMARY KEY, musician_id INT NOT NULL, band_id INT NOT NULL);",
+  [],
+  (err, result) => {
+    if (err) {
+      return console.error("Error executing query", err.stack);
+    }
+  }
+);
+
+// MUSICIANS
 /* POST: register new musician. */
 router.post("/musician", function (req, res, next) {
   const getAge = (birthDate) =>
@@ -20,14 +54,14 @@ router.post("/musician", function (req, res, next) {
 
   const { name, age, date_of_birth, instrument, image_url } = data;
   pool.query(
-    "INSERT INTO musicians(name, age, date_of_birth, instrument, image_url) VALUES($1, $2, $3, $4, $5)",
+    "INSERT INTO musicians(name, age, date_of_birth, instrument, image_url) VALUES($1, $2, $3, $4, $5) returning *",
     [name, age, date_of_birth, instrument, image_url],
     (error, results) => {
       if (error) {
         console.log(error);
-        throw error;
+        return res.status(500).json(error);
       }
-      return res.json(results.rows);
+      return res.json(results.rows[0]);
     }
   );
 });
@@ -75,6 +109,8 @@ router.get("/musicians/:id/bands", (req, res, next) => {
   );
 });
 
+// BANDS
+
 /* POST: register new band. */
 router.post("/bands", function (req, res, next) {
   console.log("hi");
@@ -82,14 +118,30 @@ router.post("/bands", function (req, res, next) {
   const { name, description, image_url } = req.body;
 
   pool.query(
-    "INSERT INTO bands(name, description, image_url) VALUES($1, $2, $3)",
+    "INSERT INTO bands(name, description, image_url) VALUES($1, $2, $3) returning *",
     [name, description, image_url],
     (error, results) => {
       if (error) {
         console.log(error);
         throw error;
       }
-      return res.json(results.rows);
+      return res.json(results.rows[0]);
+    }
+  );
+});
+
+/* GET: get one band. */
+router.get("/bands/:id", (req, res, next) => {
+  console.log(req.params.id);
+  pool.query(
+    "SELECT * FROM bands WHERE band_id = $1",
+    [req.params.id],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      res.json(results.rows);
     }
   );
 });
@@ -103,6 +155,22 @@ router.get("/bands", (req, res, next) => {
     }
     res.json(results.rows);
   });
+});
+
+// GET: all musicians for single band
+router.get("/bands/:id/musicians", (req, res, next) => {
+  console.log(req.params.id);
+  pool.query(
+    "SELECT m.musician_id, name, instrument, date_of_birth, age, image_url FROM musician_band mb JOIN musicians m ON m.musician_id = mb.musician_id WHERE mb.band_id = $1;",
+    [req.params.id],
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      res.json(results.rows);
+    }
+  );
 });
 
 /* POST: add band to musician relationship. */
