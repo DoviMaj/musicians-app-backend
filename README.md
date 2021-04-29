@@ -1,4 +1,4 @@
-# musicians-app-backend
+# Musicians App - backend
 
 ## Tech used:
 * NodeJS 
