@@ -1,5 +1,10 @@
 # musicians-app-backend
 
+## Tech used:
+* NodeJS 
+* PostgreSQL 
+* Express.js
+
 ## Getting Started
 
 Add a `.env` file with those properties:
