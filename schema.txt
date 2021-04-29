@@ -11,7 +11,7 @@ musician_id | name   | age   | date_of_birth | instrument | image_url
 2           | Jane   |   33  |  23-04-2000   |  piano     | dsvsd
 3           | Daniel |   21  |  23-04-2000   |  saxofone  | sdbs
 
-CREATE TABLE musicians(
+CREATE TABLE IF NOT EXISTS musicians(
     musician_id SERIAL PRIMARY KEY, 
     name VARCHAR ( 50 ) NOT NULL,
     age INT NOT NULL,
@@ -27,7 +27,7 @@ band_id | name         | description  | image_url
 2       | Doors        | vsdv         | sdv
 3       | Kinks        | sdv          | sdv
  
-CREATE TABLE bands(
+CREATE TABLE IF NOT EXISTS bands(
     band_id SERIAL PRIMARY KEY, 
     name VARCHAR ( 20 ) NOT NULL,
     description VARCHAR ( 200 ) NOT NULL,
@@ -42,7 +42,7 @@ musician_id | band_id
   2         |  2   # Jane is in Doors
   3         |  1   # Daniel is in Beatles
 
-CREATE TABLE musician_band(
+CREATE TABLE IF NOT EXISTS musician_band(
     id SERIAL PRIMARY KEY, 
     musician_id INT NOT NULL,
     band_id INT NOT NULL
