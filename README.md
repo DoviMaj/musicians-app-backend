@@ -24,3 +24,5 @@ npm run dev
 # or
 yarn dev
 ```
+
+The server will be available at [http://localhost:5000](http://localhost:5000)
