@@ -1,5 +1,7 @@
 # Musicians App - backend
 
+### Front-end [here](https://github.com/DoviMaj/musicians-app-frontend/)
+
 ## Tech used:
 
 - NodeJS
