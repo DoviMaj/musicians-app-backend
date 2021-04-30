@@ -8,8 +8,6 @@
 
 Database schema [here](https://github.com/DoviMaj/musicians-app-backend/blob/master/schema.txt)
 
-Run `psql -d api -f api.sql` to import the sample db.
-
 ## Getting Started
 
 Run the development server:
